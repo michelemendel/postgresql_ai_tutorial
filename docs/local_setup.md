@@ -25,36 +25,7 @@ brew install pgcli
 
 ## 1. Create the Compose file
 
-From the repository root, place this compose file at `./docker-compose.yml`:
-
-    version: "3.8"
-
-    services:
-      db:
-        image: postgres:17
-        container_name: pgdev
-        env_file:
-          - ./.env.local
-        volumes:
-          - pgdata:/var/lib/postgresql/data
-        ports:
-          - "5432:5432"
-        healthcheck:
-          test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-          interval: 5s
-          retries: 5
-
-      migrate:
-        image: postgres:17
-        entrypoint: ["sh", "-c"]
-        volumes:
-          - ./migrations:/migrations:ro
-        command: >
-          "until pg_isready -h db -U ${POSTGRES_USER}; do sleep 1; done;
-           psql -h db -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f /migrations/init.sql"
-
-    volumes:
-      pgdata:
+See `./docker-compose.yml`:
 
 Notes:
 
@@ -62,17 +33,13 @@ Notes:
 - The db service runs Postgres normally without overriding its CMD.
 - The migrate service waits for Postgres, runs the SQL script, then exits.
 
-## 2. Create the `.env` file
+## 2. Create the `.env.local` file
 
-Copy the sample to `.env.local` (Compose will automatically load `.env`, but we keep secrets out of version control):
+Copy `.env.example` to `.env.local` and customize if needed:
 
-    cat > .env.local <<'ENV'
-    POSTGRES_USER=devuser
-    POSTGRES_PASSWORD=devpass
-    POSTGRES_DB=devdb
-    ENV
+    cp .env.example .env.local
 
-If you want these defaults checked in, you can add `.env.example` with the same keys and remind contributors to duplicate it.
+The `.env.local` file contains your database credentials and is not tracked in version control.
 
 ## 3. Create the migrations folder and an example SQL file
 

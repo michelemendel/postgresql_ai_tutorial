@@ -1,8 +1,6 @@
 # Overview
 
-We want to learn PostgrSQL by using AI tools instead of the classic way with text or video tutorials.
-
----
+We want to learn PostgreSQL by using AI tools instead of the classic way with text or video tutorials.
 
 ## Links
 
@@ -12,12 +10,11 @@ We want to learn PostgrSQL by using AI tools instead of the classic way with tex
 - [What not to learn for a managed db](https://www.perplexity.ai/search/regarding-learning-postgresql-bf.2rikKT7izamkyHen1sA)
 - [Plan at ChatGPT](https://chatgpt.com/c/691ee4d0-6448-832b-bb2e-58ba7feb4082)
 
----
-
 ## 10.000m overview
 
 - use chatgpt for main plan
 - use warp for interactive and non-linear studies. we may have to pay
+- use cursor ide or google's antigravity ide
 - use perplexity to research topics
-- use md files
+- write in md files
 - the main plan is created from `../prompts/plan_chatgpt.md`

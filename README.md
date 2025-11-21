@@ -14,7 +14,7 @@ Learning PostgreSQL by leaning on AI assistants instead of traditional textbooks
 - `docs/local_setup.md` – Docker Compose instructions (Postgres 17, `.env` driven).
 - `docs/classic_tutorials.md` – list of traditional resources (ignored by AI agents unless explicitly requested).
 - `prompts/plan_chatgpt.md` – master prompt used to generate/refresh the learning roadmap.
-- `.env`, `.env.local`, `docker-compose.yml` – local runtime configuration.
+- `.env.example`, `.env.local`, `docker-compose.yml` – local runtime configuration.
 
 ## Tooling
 
@@ -30,7 +30,7 @@ Learning PostgreSQL by leaning on AI assistants instead of traditional textbooks
 
 ## Getting Started
 
-1. Copy `.env` to `.env.local` (keep `.env.local` untracked or customize credentials there).
+1. Copy `.env.example` to `.env.local` (keep `.env.local` untracked or customize credentials there).
 2. Start PostgreSQL: `docker compose up -d`.
 3. Run migrations when needed: `docker compose run --rm migrate`.
 4. Connect with `pgcli` or `psql` using the credentials defined in `.env.local`.
@@ -42,17 +42,29 @@ alias pgdev-start='docker compose up -d'
 alias pgdev-stop='docker compose down'
 alias pgdev-migrate='docker compose run --rm migrate'
 alias pgdev-reset='docker compose down -v'
+# Set environment variables from .env file
+alias pgsetenv='set -a; source .env.local; set +a'
 # Connect with psql
-alias pgconnect= 'psql -h localhost -p 5432 -U "${POSTGRES_USER}" -d "${POSTGRES_DB}"'
+alias pgconnect='psql -h localhost -p 5432 -U "${POSTGRES_USER}" -d "${POSTGRES_DB}"'
 # Connect with pgcli
-alias pgcliconnect= 'pgcli -h localhost -p 5432 -U "${POSTGRES_USER}" -d "${POSTGRES_DB}"'
+alias pgcliconnect='pgcli -h localhost -p 5432 -U "${POSTGRES_USER}" -d "${POSTGRES_DB}"'
 
 ```
 
+### Using `pgsetenv`
+
+The `pgsetenv` alias exports environment variables from `.env.local` into your current shell session. Add this to your `~/.zshrc`:
+
+```bash
+alias pgsetenv='set -a; source .env.local; set +a'
+```
+
+Run `pgsetenv` in your terminal before using `pgconnect` or `pgcliconnect` aliases.
+
 ### Using `pgconnect` / `pgcliconnect`
 
-- Both aliases live in `~/.zshrc` and rely on the environment variables exported in `.env` / `.env.local`.
-- After editing `.zshrc`, run `source ~/.zshrc` (or start a new terminal) so the aliases load into your shell session.
+- Both aliases live in `~/.zshrc` and rely on the environment variables `POSTGRES_USER` and `POSTGRES_DB` being exported in your shell session.
+- Before using the aliases, run `pgsetenv` in your terminal to export the variables from `.env.local`.
 - Then run `pgconnect` (psql) or `pgcliconnect` (pgcli); the alias will substitute `${POSTGRES_USER}`/`${POSTGRES_DB}` automatically using the values from your shell environment.
 
 ## Contributing Workflow
