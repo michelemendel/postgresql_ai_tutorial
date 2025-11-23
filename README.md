@@ -10,23 +10,45 @@ Learning PostgreSQL by leaning on AI assistants instead of traditional textbooks
 
 ## Repo Layout
 
+### Folder Structure
+
+- `docs/` – all Markdown guidance (overview, local setup, classic tutorials).
+- `prompts/` – AI prompt definitions.
+- `migrations/` – SQL files consumed by the `migrate` service (`init.sql`, etc.).
+- `learnings/` – notes and insights from interactive study sessions.
+- project root – runtime files (`docker-compose.yml`, `.env`, `.env.local`, README).
+
+### Key Files
+
 - `docs/overview.md` – high-level plan, key links, and focus topics.
 - `docs/local_setup.md` – Docker Compose instructions (Postgres 17, `.env` driven).
 - `docs/classic_tutorials.md` – list of traditional resources (ignored by AI agents unless explicitly requested).
-- `prompts/plan_chatgpt.md` – master prompt used to generate/refresh the learning roadmap.
+- `docs/study_plan.md` – study plan generated from `prompts/create_plan.md` (paste ChatGPT response here).
+- `learnings/` – folder for notes and insights from interactive, non-linear study sessions (create individual Markdown files as needed).
+- `prompts/create_plan.md` – master prompt used to generate/refresh the learning roadmap.
 - `.env.example`, `.env.local`, `docker-compose.yml` – local runtime configuration.
 
 ## Tooling
 
-- **ChatGPT**: primary planning and deep-dive questions (prompt stored in `prompts/plan_chatgpt.md`).
+- **ChatGPT**: primary planning and deep-dive questions (prompt stored in `prompts/create_plan.md`).
 - **Perplexity**: topic research and cross-checking facts.
 - **Warp** / **Cursor** / **Antigravity**: interactive shells/IDEs with inline AI to try queries, capture answers, and keep the learning loop tight.
 
 ### How the agent uses docs & prompts
 
 - The agent treats files under `docs/` as the canonical narrative (overview, setup, classic resources). Reference them by filename or section when giving instructions; no need to paste the content into chat unless you are pointing out a specific snippet.
-- `prompts/plan_chatgpt.md` is the authoritative master prompt. When you want the agent to regenerate the study plan, mention this file (“run the plan from `prompts/plan_chatgpt.md`”) so it knows exactly which instructions to follow.
-- For files marked as “ignore” (e.g., `docs/classic_tutorials.md`), explicitly tell the agent if you want to override that behavior.
+- `prompts/create_plan.md` is the authoritative master prompt. When you want the agent to regenerate the study plan, mention this file ("run the plan from `prompts/create_plan.md`") so it knows exactly which instructions to follow. Paste the response into `docs/study_plan.md`.
+- Document interactive learnings (from Warp, Cursor, etc.) by creating files in `learnings/` as you discover new concepts.
+- For files marked as "ignore" (e.g., `docs/classic_tutorials.md`), explicitly tell the agent if you want to override that behavior.
+
+## Contributing Workflow
+
+1. Update prompts or docs in `docs/` as you iterate on the learning plan.
+2. When generating a new study plan from `prompts/create_plan.md`, paste the ChatGPT response into `docs/study_plan.md`.
+3. Document learnings from interactive sessions (Warp, Cursor, etc.) by creating files in `learnings/`.
+4. Capture other noteworthy AI outputs (from Perplexity, ChatGPT deep-dives, etc.) as new Markdown files in `learnings/`.
+5. Run `docker compose down` when finished hacking to keep the environment clean.
+6. Commit and push changes once the docs/environment updates are in place.
 
 ## Getting Started
 
@@ -66,17 +88,3 @@ Run `pgsetenv` in your terminal before using `pgconnect` or `pgcliconnect` alias
 - Both aliases live in `~/.zshrc` and rely on the environment variables `POSTGRES_USER` and `POSTGRES_DB` being exported in your shell session.
 - Before using the aliases, run `pgsetenv` in your terminal to export the variables from `.env.local`.
 - Then run `pgconnect` (psql) or `pgcliconnect` (pgcli); the alias will substitute `${POSTGRES_USER}`/`${POSTGRES_DB}` automatically using the values from your shell environment.
-
-## Contributing Workflow
-
-1. Update prompts or docs in `docs/` as you iterate on the learning plan.
-2. Capture noteworthy AI outputs directly in versioned Markdown files.
-3. Run `docker compose down` when finished hacking to keep the environment clean.
-4. Commit and push changes once the docs/environment updates are in place.
-
-## Folder Structure
-
-- `docs/` – all Markdown guidance (overview, local setup, classic tutorials).
-- `prompts/` – AI prompt definitions.
-- `migrations/` – SQL files consumed by the `migrate` service (`init.sql`, etc.).
-- project root – runtime files (`docker-compose.yml`, `.env`, `.env.local`, README).
